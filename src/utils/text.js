@@ -1,4 +1,4 @@
-export const limitText = (text = "", maxChars = 30000) => {
+export const limitText = (text = "", maxChars = 12000) => {
   if (text.length <= maxChars) return text;
 
   const headLength = Math.floor(maxChars * 0.7);
@@ -6,4 +6,3 @@ export const limitText = (text = "", maxChars = 30000) => {
 
   return `${text.slice(0, headLength)}\n\n[...middle of PDF omitted for length...]\n\n${text.slice(-tailLength)}`;
 };
-

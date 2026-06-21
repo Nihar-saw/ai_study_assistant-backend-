@@ -25,6 +25,7 @@ const pdfSchema = new mongoose.Schema(
     summary: { type: String },
     flashcards: { type: Array },
     quiz: { type: Array },
+    previousQuestions: [{ type: String }],
     resources: { type: Array },
   },
   {

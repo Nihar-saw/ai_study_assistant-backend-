@@ -4,7 +4,7 @@ import { chatWithPDF } from "../services/ai/chatService.js";
 export const chat = async (req, res) => {
   try {
     const { id } = req.params;
-    const { message, history } = req.body;
+    const { message, history, tutorMode } = req.body;
     const pdf = await PDF.findOne({ _id: id, uploadedBy: req.user.id });
 
     if (!pdf) {
@@ -15,7 +15,7 @@ export const chat = async (req, res) => {
       return res.status(400).json({ message: "No readable text was found in this PDF" });
     }
 
-    const response = await chatWithPDF(pdf.extractedText, message, history);
+    const response = await chatWithPDF(pdf.extractedText, message, history, tutorMode);
     res.json({ response });
   } catch (error) {
     res.status(500).json({ message: error.message });

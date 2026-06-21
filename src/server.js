@@ -1,6 +1,7 @@
 import "dotenv/config";
 import app from "./app.js";
 import connectDB from "./config/db.js";
+// Trigger dev server restart to reload environment variables (switching to Ollama)
 
 connectDB();
 

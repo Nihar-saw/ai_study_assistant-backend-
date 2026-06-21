@@ -1,5 +1,6 @@
 import { getGeminiModel } from "./ai/geminiClient.js";
 import { limitText } from "../utils/text.js";
+import { fallbackSummary } from "./ai/fallbackStudyService.js";
 
 export const generateSummary = async (text) => {
   try {
@@ -18,6 +19,6 @@ export const generateSummary = async (text) => {
     return await response.text();
   } catch (error) {
     console.error("Summary generation error:", error);
-    throw new Error(error.message || "Summary generation failed");
+    return fallbackSummary(text);
   }
 };

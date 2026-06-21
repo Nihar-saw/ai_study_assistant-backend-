@@ -2,6 +2,7 @@ import fs from "fs";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import PDF from "../models/PDF.js";
 import { identifyPDF } from "../services/ai/identifyService.js";
+import { fallbackProfile } from "../services/ai/fallbackStudyService.js";
 
 const extractTextFromPDF = async (filePath) => {
   try {
@@ -41,24 +42,23 @@ export const uploadPDF = async (req, res) => {
       });
     }
 
-    let aiProfile = {};
-    try {
-      aiProfile = await identifyPDF(extractedText, req.file.originalname);
-      console.log("PDF identification successful");
-    } catch (error) {
-      console.error("PDF identification failed:", error.message);
-    }
+    const fallbackAiProfile = fallbackProfile(extractedText, req.file.originalname);
 
     const savedPDF = await PDF.create({
       title: req.file.originalname,
       filename: req.file.filename,
       extractedText,
-      ...aiProfile,
+      ...fallbackAiProfile,
       uploadedBy: req.user.id,
     });
 
     console.log(`PDF saved to DB: ${savedPDF._id}`);
     res.status(201).json(savedPDF);
+
+    identifyPDF(extractedText, req.file.originalname)
+      .then((aiProfile) => PDF.findByIdAndUpdate(savedPDF._id, aiProfile, { returnDocument: "after" }))
+      .then(() => console.log(`PDF identification updated: ${savedPDF._id}`))
+      .catch((error) => console.error("Background PDF identification failed:", error.message));
   } catch (error) {
     console.error("Upload PDF Error:", error);
     res.status(500).json({ message: error.message });
@@ -88,7 +88,7 @@ export const identifyExistingPDF = async (req, res) => {
     }
 
     const aiProfile = await identifyPDF(pdf.extractedText, pdf.title);
-    const updatedPDF = await PDF.findByIdAndUpdate(id, aiProfile, { new: true });
+    const updatedPDF = await PDF.findByIdAndUpdate(id, aiProfile, { returnDocument: "after" });
 
     res.json(updatedPDF);
   } catch (error) {

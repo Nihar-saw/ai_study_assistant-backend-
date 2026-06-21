@@ -14,11 +14,14 @@ export const getFlashcards = async (req, res) => {
       return res.status(400).json({ message: "No readable text was found in this PDF" });
     }
 
-    if (pdf.flashcards && pdf.flashcards.length > 0) {
+    const { refresh } = req.query;
+
+    if (refresh !== "true" && pdf.flashcards && pdf.flashcards.length > 0) {
       return res.json(pdf.flashcards);
     }
 
-    const flashcards = await generateFlashcards(pdf.extractedText);
+    const existingCards = (refresh === "true" && pdf.flashcards && pdf.flashcards.length > 0) ? pdf.flashcards : null;
+    const flashcards = await generateFlashcards(pdf.extractedText, existingCards);
     
     // Save to cache
     pdf.flashcards = flashcards;

@@ -1,6 +1,7 @@
 import { getGeminiModel } from "./geminiClient.js";
 import { parseAiJsonArray } from "../../utils/parseAiJson.js";
 import { limitText } from "../../utils/text.js";
+import { fallbackResources } from "./fallbackStudyService.js";
 
 export const findResources = async (text) => {
   try {
@@ -27,6 +28,6 @@ export const findResources = async (text) => {
     return parseAiJsonArray(responseText, "Resources");
   } catch (error) {
     console.error("Resource generation error:", error);
-    throw new Error(error.message || "Failed to find resources");
+    return fallbackResources(text);
   }
 };

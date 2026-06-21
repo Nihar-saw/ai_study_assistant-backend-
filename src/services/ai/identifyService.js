@@ -1,6 +1,7 @@
 import { getGeminiModel } from "./geminiClient.js";
 import { parseAiJsonObject } from "../../utils/parseAiJson.js";
 import { limitText } from "../../utils/text.js";
+import { fallbackProfile } from "./fallbackStudyService.js";
 
 export const identifyPDF = async (text, filename) => {
   const model = getGeminiModel();
@@ -24,9 +25,16 @@ PDF text:
 ${limitText(text, 12000)}
 `;
 
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const profile = parseAiJsonObject(await response.text(), "PDF identification");
+  let profile;
+
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    profile = parseAiJsonObject(await response.text(), "PDF identification");
+  } catch (error) {
+    console.error("PDF identification fallback used:", error.message);
+    profile = fallbackProfile(text, filename);
+  }
 
   return {
     detectedTitle: String(profile.detectedTitle || filename).slice(0, 120),
@@ -36,4 +44,3 @@ ${limitText(text, 12000)}
     suggestedQuestions: Array.isArray(profile.suggestedQuestions) ? profile.suggestedQuestions.slice(0, 5).map(String) : [],
   };
 };
-

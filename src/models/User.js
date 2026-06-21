@@ -15,6 +15,33 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    xp: {
+      type: Number,
+      default: 0,
+    },
+    level: {
+      type: Number,
+      default: 1,
+    },
+    streak: {
+      type: Number,
+      default: 0,
+    },
+    lastActiveDate: {
+      type: Date,
+    },
+    achievements: [{
+      id: String,
+      title: String,
+      description: String,
+      unlockedAt: {
+        type: Date,
+        default: Date.now,
+      },
+    }],
+    badges: [{
+      type: String,
+    }],
   },
   {
     timestamps: true,
