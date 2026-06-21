@@ -7,3 +7,8 @@ node_modules/
 venv/
 .venv/
 __pycache__/
+
+# Local files & uploads
+uploads/
+*.log
+

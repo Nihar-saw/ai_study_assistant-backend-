@@ -1,4 +1,6 @@
 import fs from "fs";
+import os from "os";
+import path from "path";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import PDF from "../models/PDF.js";
 import { identifyPDF } from "../services/ai/identifyService.js";
@@ -35,6 +37,11 @@ export const uploadPDF = async (req, res) => {
     
     const extractedText = await extractTextFromPDF(filePath);
     console.log("Text extraction successful");
+
+    // Clean up temporary file immediately after text extraction
+    fs.unlink(filePath, (err) => {
+      if (err) console.error("Failed to delete temp file:", err);
+    });
 
     if (!extractedText) {
       return res.status(400).json({
@@ -106,7 +113,7 @@ export const deletePDF = async (req, res) => {
       return res.status(404).json({ message: "PDF not found" });
     }
 
-    const filePath = `uploads/${pdf.filename}`;
+    const filePath = path.join(os.tmpdir(), pdf.filename);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
