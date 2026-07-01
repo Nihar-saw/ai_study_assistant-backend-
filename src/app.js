@@ -28,8 +28,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      "https://ai-study-assistant-g7we04l2d-nihar-saws-projects.vercel.app",
+      "http://localhost:8000",
       "https://ai-study-assistant-pearl.vercel.app"
     ],
     credentials: true,
