@@ -1,25 +1,18 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
+import pdfParse from "pdf-parse";
 import PDF from "../models/PDF.js";
 import { identifyPDF } from "../services/ai/identifyService.js";
 import { fallbackProfile } from "../services/ai/fallbackStudyService.js";
 
 const extractTextFromPDF = async (filePath) => {
   try {
-    const data = new Uint8Array(fs.readFileSync(filePath));
-    const pdf = await getDocument({ data }).promise;
-    let extractedText = "";
+    const dataBuffer = fs.readFileSync(filePath);
 
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const textItems = textContent.items.map((item) => item.str);
-      extractedText += `${textItems.join(" ")}\n\n`;
-    }
+    const data = await pdfParse(dataBuffer);
 
-    return extractedText.trim();
+    return data.text.trim();
   } catch (error) {
     console.error("PDF Extraction Error:", error);
     throw new Error("Failed to extract text from PDF");
