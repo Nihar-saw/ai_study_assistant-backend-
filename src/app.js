@@ -24,16 +24,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+import cors from "cors";
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:8000",
-      "https://ai-study-assistant-pearl.vercel.app"
-    ],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: "https://ai-study-assistant-pearl.vercel.app",
+  credentials: true,
+}));
+
+app.options("*", cors());
 app.use(express.json());
 
 // Request logger
