@@ -1,7 +1,7 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 import PDF from "../models/PDF.js";
 import { identifyPDF } from "../services/ai/identifyService.js";
 import { fallbackProfile } from "../services/ai/fallbackStudyService.js";
@@ -9,7 +9,7 @@ import { fallbackProfile } from "../services/ai/fallbackStudyService.js";
 const extractTextFromPDF = async (filePath) => {
   try {
     const data = new Uint8Array(fs.readFileSync(filePath));
-    const pdf = await pdfjsLib.getDocument({ data }).promise;
+    const pdf = await getDocument({ data }).promise;
     let extractedText = "";
 
     for (let i = 1; i <= pdf.numPages; i++) {
