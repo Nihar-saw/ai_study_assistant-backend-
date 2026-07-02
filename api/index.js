@@ -1,7 +1,6 @@
 import app from "../src/app.js";
-import connectDB from "../src/config/db.js";
 
-// Connect to MongoDB
-await connectDB();
+// DB connection is handled lazily by middleware in app.js
+// This prevents Vercel serverless function crashes on cold start
 
 export default app;

@@ -1,9 +1,12 @@
 import "dotenv/config";
 import app from "./app.js";
 import connectDB from "./config/db.js";
-// Trigger dev server restart to reload environment variables (switching to Ollama)
 
-connectDB();
+// Attempt an initial DB connection on startup (non-fatal if it fails)
+// The per-request middleware in app.js will retry on each request
+connectDB().catch((err) => {
+  console.warn("Initial DB connection attempt failed, will retry on first request:", err.message);
+});
 
 const PORT = process.env.PORT || 5000;
 
