@@ -11,4 +11,4 @@ __pycache__/
 # Local files & uploads
 uploads/
 *.log
-
+backend-dev.out.log

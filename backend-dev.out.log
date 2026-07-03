@@ -55,3 +55,16 @@ MongoDB Connected: ac-euhsony-shard-00-00.yhkalco.mongodb.net
 [32m[nodemon] starting `node src/server.js`[39m
 MongoDB Connected: ac-euhsony-shard-00-00.yhkalco.mongodb.net
 🚀 Server running on port 8000
+GET /health
+POST /api/auth/login
+GET /api/auth/profile
+GET /api/auth/profile
+GET /api/pdf
+GET /api/pdf
+GET /api/pdf
+GET /api/pdf
+GET /api/pdf
+GET /api/pdf
+GET /api/resources/6a47cf72fa8d545b1c45634b
+GET /api/pdf
+GET /api/pdf
