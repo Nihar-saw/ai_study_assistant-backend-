@@ -1,22 +1,36 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
-import pdfParse from "pdf-parse";
+import PDFParser from "pdf2json";
 import PDF from "../models/PDF.js";
 import { identifyPDF } from "../services/ai/identifyService.js";
 import { fallbackProfile } from "../services/ai/fallbackStudyService.js";
 
-const extractTextFromPDF = async (filePath) => {
-  try {
-    const dataBuffer = fs.readFileSync(filePath);
+const extractTextFromPDF = (filePath) => {
+  return new Promise((resolve, reject) => {
+    const pdfParser = new PDFParser();
 
-    const data = await pdfParse(dataBuffer);
+    pdfParser.on("pdfParser_dataError", (err) => {
+      reject(err.parserError);
+    });
 
-    return data.text.trim();
-  } catch (error) {
-    console.error("PDF Extraction Error:", error);
-    throw new Error("Failed to extract text from PDF");
-  }
+    pdfParser.on("pdfParser_dataReady", (pdfData) => {
+      let text = "";
+
+      pdfData.Pages.forEach((page) => {
+        page.Texts.forEach((t) => {
+          t.R.forEach((r) => {
+            text += decodeURIComponent(r.T) + " ";
+          });
+        });
+        text += "\n";
+      });
+
+      resolve(text);
+    });
+
+    pdfParser.loadPDF(filePath);
+  });
 };
 
 export const uploadPDF = async (req, res) => {
