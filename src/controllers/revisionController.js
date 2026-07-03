@@ -1,4 +1,5 @@
 import Revision from "../models/Revision.js";
+import PDF from "../models/PDF.js";
 import { awardXP } from "../services/gamificationService.js";
 
 // Get all revision items for a user
@@ -26,14 +27,29 @@ export const createRevision = async (req, res) => {
       return res.status(400).json({ message: "PDF ID, topic name, and due date/time are required." });
     }
 
+    const parsedDueTime = new Date(dueTime);
+    if (Number.isNaN(parsedDueTime.getTime())) {
+      return res.status(400).json({ message: "A valid revision date/time is required." });
+    }
+
+    const pdf = await PDF.findOne({ _id: pdfId, uploadedBy: userId });
+    if (!pdf) {
+      return res.status(404).json({ message: "PDF not found" });
+    }
+
     const revision = await Revision.create({
       userId,
       pdfId,
-      topic,
-      dueTime: new Date(dueTime),
+      topic: topic.trim(),
+      dueTime: parsedDueTime,
     });
 
-    res.status(201).json(revision);
+    const gamification = await awardXP(userId, 10, "revision_scheduled", {
+      pdfId,
+      topics: [topic.trim()],
+    });
+
+    res.status(201).json({ revision, gamification });
   } catch (error) {
     console.error("Create Revision Controller Error:", error);
     res.status(500).json({ message: error.message });

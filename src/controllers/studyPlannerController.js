@@ -18,21 +18,37 @@ export const createStudyPlan = async (req, res) => {
     const userId = req.user.id;
     const { examDate, subjects, dailyStudyHours } = req.body;
 
-    if (!examDate || !subjects || !dailyStudyHours) {
+    if (!examDate || !Array.isArray(subjects) || subjects.length === 0 || !dailyStudyHours) {
       return res.status(400).json({ message: "Exam date, subjects, and study hours are required" });
     }
 
+    const parsedExamDate = new Date(examDate);
+    const hours = Number(dailyStudyHours);
+    const cleanSubjects = subjects.map((subject) => String(subject).trim()).filter(Boolean);
+
+    if (Number.isNaN(parsedExamDate.getTime()) || parsedExamDate <= new Date()) {
+      return res.status(400).json({ message: "Exam date must be a valid future date" });
+    }
+
+    if (cleanSubjects.length === 0) {
+      return res.status(400).json({ message: "At least one valid subject is required" });
+    }
+
+    if (!Number.isFinite(hours) || hours < 1 || hours > 16) {
+      return res.status(400).json({ message: "Daily study hours must be between 1 and 16" });
+    }
+
     console.log(`[Planner] Generating plan for user: ${userId}, examDate: ${examDate}`);
-    const planData = await generateStudyPlan(examDate, subjects, dailyStudyHours);
+    const planData = await generateStudyPlan(parsedExamDate, cleanSubjects, hours);
 
     // Delete existing plan if any
     await StudyPlan.findOneAndDelete({ userId });
 
     const newPlan = await StudyPlan.create({
       userId,
-      examDate: new Date(examDate),
-      subjects,
-      dailyStudyHours,
+      examDate: parsedExamDate,
+      subjects: cleanSubjects,
+      dailyStudyHours: hours,
       planData,
       completedTasks: [],
     });
@@ -52,18 +68,23 @@ export const toggleTaskComplete = async (req, res) => {
     const userId = req.user.id;
     const { taskKey } = req.body;
 
+    if (!taskKey?.trim()) {
+      return res.status(400).json({ message: "Task key is required" });
+    }
+
     const plan = await StudyPlan.findOne({ userId });
     if (!plan) {
       return res.status(404).json({ message: "Study plan not found" });
     }
 
-    const taskIndex = plan.completedTasks.indexOf(taskKey);
+    const cleanTaskKey = taskKey.trim();
+    const taskIndex = plan.completedTasks.indexOf(cleanTaskKey);
     let isCompleted = false;
 
     if (taskIndex > -1) {
       plan.completedTasks.splice(taskIndex, 1);
     } else {
-      plan.completedTasks.push(taskKey);
+      plan.completedTasks.push(cleanTaskKey);
       isCompleted = true;
     }
 

@@ -7,60 +7,51 @@
 [33m[nodemon] watching path(s): *.*[39m
 [33m[nodemon] watching extensions: js,mjs,cjs,json[39m
 [32m[nodemon] starting `node src/server.js`[39m
-Server running on port 8000
-MongoDB Connected: ac-euhsony-shard-00-02.yhkalco.mongodb.net
-2026-06-12T13:23:00.487Z - GET / 200
-2026-06-12T13:24:07.270Z - GET / 200
-2026-06-12T13:24:07.722Z - GET / 200
-2026-06-12T13:24:07.737Z - GET /api 404
-2026-06-12T13:24:08.970Z - GET / 304
-2026-06-12T13:24:09.451Z - GET / 304
-2026-06-12T13:24:13.734Z - GET / 304
-2026-06-12T13:24:13.744Z - GET / 304
-2026-06-12T13:24:14.281Z - GET / 304
-2026-06-12T13:24:14.290Z - GET / 304
-2026-06-12T13:24:17.004Z - GET / 304
-2026-06-12T13:24:17.493Z - GET / 304
-2026-06-12T13:24:17.676Z - GET / 304
-2026-06-12T13:24:17.900Z - GET / 304
-2026-06-12T13:24:18.092Z - GET / 304
-2026-06-12T13:24:26.666Z - GET / 304
-2026-06-12T13:24:26.988Z - GET / 200
-2026-06-12T13:24:26.990Z - GET /api 404
-2026-06-12T13:24:55.532Z - POST /login 200
-2026-06-12T13:24:55.585Z - GET / 304
-2026-06-12T13:24:55.589Z - GET / 200
-2026-06-12T13:24:55.598Z - GET / 304
-2026-06-12T13:24:55.605Z - GET / 304
-2026-06-12T13:24:56.844Z - GET / 304
-2026-06-12T13:24:56.858Z - GET / 304
-2026-06-12T13:24:57.459Z - GET / 304
-2026-06-12T13:24:57.470Z - GET / 304
-2026-06-12T13:24:57.961Z - GET / 304
-2026-06-12T13:24:57.970Z - GET / 304
-2026-06-12T13:24:59.001Z - GET / 304
-2026-06-12T13:24:59.016Z - GET / 304
-2026-06-12T13:24:59.385Z - GET / 304
-2026-06-12T13:24:59.398Z - GET / 304
-2026-06-12T13:24:59.784Z - GET / 304
-2026-06-12T13:24:59.799Z - GET / 304
-2026-06-12T13:25:01.320Z - GET / 304
-2026-06-12T13:25:01.324Z - GET / 304
-2026-06-12T13:25:01.328Z - GET / 304
-2026-06-12T13:25:01.335Z - GET / 304
-2026-06-12T13:25:02.323Z - GET / 304
-2026-06-12T13:25:02.334Z - GET / 304
-2026-06-12T13:25:03.085Z - GET / 304
-2026-06-12T13:25:03.093Z - GET / 304
-2026-06-12T13:25:03.117Z - GET /6a0094746cccdc0fc3cfb1e4 304
-2026-06-12T13:25:03.132Z - GET /6a0094746cccdc0fc3cfb1e4 304
-2026-06-12T13:25:05.333Z - GET /6a0094746cccdc0fc3cfb1e4 304
-2026-06-12T13:25:08.500Z - GET /6a0094746cccdc0fc3cfb1e4 304
-2026-06-12T13:25:10.633Z - GET / 304
-2026-06-12T13:25:10.636Z - GET / 304
-2026-06-12T13:25:10.641Z - GET / 304
-2026-06-12T13:25:10.647Z - GET / 304
-2026-06-12T13:25:12.484Z - GET / 304
-2026-06-12T13:25:12.498Z - GET / 304
-Uploading file: day 8.pdf
-2026-06-12T13:25:21.044Z - POST /upload 500
+MongoDB Connected: ac-euhsony-shard-00-00.yhkalco.mongodb.net
+🚀 Server running on port 8000
+GET /health
+GET /api/auth/profile
+GET /api/auth/profile
+GET /api/pdf
+GET /api/pdf
+GET /api/resources/6a47cf72fa8d545b1c45634b
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+MongoDB Connected: ac-euhsony-shard-00-00.yhkalco.mongodb.net
+🚀 Server running on port 8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+MongoDB Connected: ac-euhsony-shard-00-00.yhkalco.mongodb.net
+🚀 Server running on port 8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+MongoDB Connected: ac-euhsony-shard-00-00.yhkalco.mongodb.net
+🚀 Server running on port 8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+MongoDB Connected: ac-euhsony-shard-00-00.yhkalco.mongodb.net
+🚀 Server running on port 8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+MongoDB Connected: ac-euhsony-shard-00-00.yhkalco.mongodb.net
+🚀 Server running on port 8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+MongoDB Connected: ac-euhsony-shard-00-00.yhkalco.mongodb.net
+🚀 Server running on port 8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+MongoDB Connected: ac-euhsony-shard-00-00.yhkalco.mongodb.net
+🚀 Server running on port 8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+MongoDB Connected: ac-euhsony-shard-00-00.yhkalco.mongodb.net
+🚀 Server running on port 8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+MongoDB Connected: ac-euhsony-shard-00-00.yhkalco.mongodb.net
+🚀 Server running on port 8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+MongoDB Connected: ac-euhsony-shard-00-00.yhkalco.mongodb.net
+🚀 Server running on port 8000

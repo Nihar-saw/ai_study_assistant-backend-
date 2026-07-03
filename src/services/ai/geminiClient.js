@@ -82,6 +82,7 @@ export const getGeminiModel = () => {
 
   const baseURL = (process.env.OLLAMA_BASE_URL || DEFAULT_OLLAMA_BASE_URL).replace("localhost", "127.0.0.1");
   const modelName = process.env.OLLAMA_MODEL || DEFAULT_OLLAMA_MODEL;
+  const timeout = Number(process.env.OLLAMA_TIMEOUT_MS) || 120000;
 
   const callOllama = async (messages) => {
     try {
@@ -95,7 +96,7 @@ export const getGeminiModel = () => {
           num_ctx: 8192,
         },
       }, {
-        timeout: 15000,
+        timeout,
       });
       console.log(`[Ollama] Success!`);
       return response.data.message.content;

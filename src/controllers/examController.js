@@ -8,6 +8,11 @@ export const getExamPrep = async (req, res) => {
     const { pdfId } = req.params;
     const { mode = "University" } = req.query;
     const userId = req.user.id;
+    const allowedModes = ["University", "Competitive", "Viva"];
+
+    if (!allowedModes.includes(mode)) {
+      return res.status(400).json({ message: "Invalid exam preparation mode" });
+    }
 
     // Check PDF access
     const pdf = await PDF.findOne({ _id: pdfId, uploadedBy: userId });

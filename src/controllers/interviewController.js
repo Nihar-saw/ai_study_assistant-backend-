@@ -22,6 +22,15 @@ export const startSession = async (req, res) => {
   try {
     const userId = req.user.id;
     const { pdfId, type = "Technical" } = req.body;
+    const allowedTypes = ["Technical", "HR", "Scenario", "Viva"];
+
+    if (!pdfId) {
+      return res.status(400).json({ message: "PDF is required" });
+    }
+
+    if (!allowedTypes.includes(type)) {
+      return res.status(400).json({ message: "Invalid interview type" });
+    }
 
     const pdf = await PDF.findOne({ _id: pdfId, uploadedBy: userId });
     if (!pdf) {
@@ -54,6 +63,10 @@ export const sendMessage = async (req, res) => {
     const { message } = req.body;
     const userId = req.user.id;
 
+    if (!message?.trim()) {
+      return res.status(400).json({ message: "Interview response is required" });
+    }
+
     const session = await InterviewSession.findOne({ _id: sessionId, userId });
     if (!session) {
       return res.status(404).json({ message: "Session not found" });
@@ -71,7 +84,7 @@ export const sendMessage = async (req, res) => {
     // 1. Save candidate message
     session.messages.push({
       role: "candidate",
-      content: message,
+      content: message.trim(),
     });
 
     // We complete the mock interview session after 3 candidate responses (total 6 messages)
@@ -94,7 +107,7 @@ export const sendMessage = async (req, res) => {
       });
     } else {
       // Generate next interviewer question
-      const nextQuestion = await generateNextInterviewTurn(session.messages, message, pdf.extractedText, session.type);
+      const nextQuestion = await generateNextInterviewTurn(session.messages, message.trim(), pdf.extractedText, session.type);
       session.messages.push({
         role: "interviewer",
         content: nextQuestion,

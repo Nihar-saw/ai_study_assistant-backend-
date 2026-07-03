@@ -1,6 +1,20 @@
 import app from "../src/app.js";
+import connectDB from "../src/config/db.js";
 
-// DB connection is handled lazily by middleware in app.js
-// This prevents Vercel serverless function crashes on cold start
+let connectionPromise;
 
-export default app;
+const ensureDatabase = () => {
+  if (!connectionPromise) {
+    connectionPromise = connectDB().catch((error) => {
+      connectionPromise = null;
+      throw error;
+    });
+  }
+
+  return connectionPromise;
+};
+
+export default async function handler(req, res) {
+  await ensureDatabase();
+  return app(req, res);
+}
