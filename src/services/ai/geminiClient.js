@@ -1,5 +1,4 @@
 import axios from "axios";
-const res = await api.post("/api/auth/login", data);
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const DEFAULT_GEMINI_MODEL = "gemini-1.5-flash";
