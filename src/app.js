@@ -1,8 +1,7 @@
 import express from "express";
 import cors from "cors";
 import path from "path";
-import { fileURLToPath } from 'url';
-import connectDB from "./config/db.js";
+import { fileURLToPath } from "url";
 
 import authRoutes from "./routes/authRoutes.js";
 import pdfRoutes from "./routes/pdfRoutes.js";
@@ -27,57 +26,55 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 const allowedOrigins = [
-  "https://ai-study-assistant-pearl.vercel.app",
+  process.env.CLIENT_URL,
   "http://localhost:5173",
-  "http://127.0.0.1:5173"
+  "http://127.0.0.1:5173",
 ];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    if (
-      allowedOrigins.includes(origin) ||
-      origin.endsWith(".vercel.app") ||
-      origin.startsWith("http://localhost:") ||
-      origin.startsWith("http://127.0.0.1:")
-    ) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin) return callback(null, true);
 
-app.options("*", cors());
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.endsWith(".vercel.app")
+      ) {
+        return callback(null, true);
+      }
 
-// Database connection middleware (ensures DB is connected before processing requests)
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (err) {
-    console.error("Database connection middleware error:", err);
-    res.status(500).json({ error: "Failed to connect to the database" });
-  }
-});
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  })
+);
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Request logger
+// Request Logger
 app.use((req, res, next) => {
-  res.on("finish", () => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.url} ${res.statusCode}`);
-  });
+  console.log(`${req.method} ${req.originalUrl}`);
   next();
 });
 
-// Static folder for PDF uploads
+// Static Uploads
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.get("/", (req, res) => {
-  res.send("AI Study Assistant API Running");
+  res.json({
+    success: true,
+    message: "AI Study Assistant API Running",
+  });
+});
+
+// Health Check
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: "healthy",
+  });
 });
 
 app.use("/api/auth", authRoutes);
@@ -97,10 +94,22 @@ app.use("/api/weakness", weaknessRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/revision", revisionRoutes);
 
-// Error handling middleware
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
+});
+
+// Global Error Handler
 app.use((err, req, res, next) => {
-  console.error("Global Error Handler:", err);
-  res.status(500).json({ message: err.message || "Internal Server Error" });
+  console.error(err);
+
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
 });
 
 export default app;
